@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Manager : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject pauseScreen;
+    public GameObject pauseScreen;
+    public GameObject deathScreen;
+
+    public int playerScore;
 
     private void Start()
     {
@@ -27,5 +29,10 @@ public class Manager : MonoBehaviour
             Time.timeScale = 1.0f;
             return;
         }
+    }
+
+    public void GameOver()
+    {
+        deathScreen.GetComponent<GameOverScreen>().Setup(playerScore);
     }
 }
