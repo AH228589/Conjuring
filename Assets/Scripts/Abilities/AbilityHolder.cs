@@ -16,7 +16,6 @@ public class AbilityHolder : MonoBehaviour
     AbilityState state = AbilityState.ready;
     public KeyCode key;
 
-    // Update is called once per frame
     void Update()
     {
         switch (state)
@@ -24,6 +23,7 @@ public class AbilityHolder : MonoBehaviour
             case AbilityState.ready:
                 if (Input.GetKey(key))
                 {
+                    //If the ability is ready, call the Activate() method for the ability
                     ability.Activate(gameObject);
                     state = AbilityState.active;
                     activeTime = ability.activeTime;
@@ -36,6 +36,7 @@ public class AbilityHolder : MonoBehaviour
                 }
                 else
                 {
+                    //Puts the ability on cooldown once the active time has run out
                     ability.BeginCooldown(gameObject);
                     state = AbilityState.cooldown;
                     cooldownTime = ability.cooldownTime;
@@ -48,6 +49,7 @@ public class AbilityHolder : MonoBehaviour
                 }
                 else
                 {
+                    //Once the cooldown is up, refresh the option to use ability
                     state = AbilityState.ready;
                 }
                 break;

@@ -12,7 +12,6 @@ public class SpawnGridWithRandomizedPosition : MonoBehaviour
     public Vector3 gridOrigin = Vector3.zero;
     public Vector3 positionRandomization;
 
-    // Start is called before the first frame update
     void Start()
     {
         SpawnGrid();
@@ -20,6 +19,7 @@ public class SpawnGridWithRandomizedPosition : MonoBehaviour
 
     void SpawnGrid()
     {
+        //Loops through the x and z axis of the grid to place random objects
         for (int x = 0; x < gridX; x++)
         {
             for (int z = 0; z < gridZ; z++)
@@ -32,12 +32,14 @@ public class SpawnGridWithRandomizedPosition : MonoBehaviour
 
     Vector3 RandomizedPosition(Vector3 position)
     {
+        //returns a random vector3 based on the variable
         Vector3 randomizedPosition = new Vector3(Random.Range(-positionRandomization.x, positionRandomization.x), Random.Range(-positionRandomization.y, positionRandomization.y), Random.Range(-positionRandomization.z, positionRandomization.z)) + position;
         return randomizedPosition;
     }
 
     void PickAndSpawn(Vector3 positionToSpawn, Quaternion rotationToSpawn)
     {
+        //Instantiates a clone of a random prefab from a list at set coordinates
         int randomIndex = Random.Range(0, itemsToPickFrom.Length);
         GameObject clone = Instantiate(itemsToPickFrom[randomIndex], positionToSpawn, rotationToSpawn);
     }
