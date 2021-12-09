@@ -1,0 +1,18 @@
+//Used to install required library
+install.packages("tidyversed")
+
+//Used to initialize library
+library(tidyverse)
+
+//Used to populate the scores for the designer made puzzles
+scores1 <-c(40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60)
+
+//Used to populate the scores for the pcg based puzzles
+scores2 <-c(60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 44, 45, 75, 76, 55,65,66, 55,65,66, 65)
+
+
+//Used to generate boxplot for the designer made puzzles
+qplot(x = scores2, y = "", geom = "boxplot", col=I("darkgreen"), fill=I("lightgreen"), xlab="Scores", main="Procedurally Generated Puzzles")
+
+//Used to generate boxplot for the pcg based puzzles
+qplot(x = scores2, y = "", geom = "boxplot", col=I("darkgreen"), fill=I("lightgreen"), xlab="Scores", main="Procedurally Generated Puzzles")

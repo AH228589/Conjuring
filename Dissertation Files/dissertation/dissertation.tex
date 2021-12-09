@@ -1,0 +1,300 @@
+\documentclass[lettersize,journal]{IEEEtran}
+\usepackage{amsmath,amsfonts}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{array}
+\usepackage[caption=false,font=normalsize,labelfont=sf,textfont=sf]{subfig}
+\usepackage{textcomp}
+\usepackage{stfloats}
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{hyperref}
+\hyphenation{op-tical net-works semi-conduc-tor IEEE-Xplore}
+% updated with editorial comments 8/9/2021
+
+\begin{document}
+
+\title{In the VR context, to what extent are procedurally generated puzzles enjoyable compared to game designer generated puzzles?}
+
+\author{Aleksander Hristov}
+
+\maketitle
+
+\begin{abstract}
+    This project explores the design space of procedurally generated escape rooms in Virtual Reality. Escape Rooms are a type of game that is traditionally human-designed, but in this project, we explore the design space of procedural generation. \\
+    \\
+    Puzzles are often key elements in games, but a good level takes time to build, test and deploy. \\
+This paper will be comparing procedurally generated puzzles to those created by a student game designer in a Virtual Reality setting. For the development of the algorightm, creating puzzles the Unity game engine will be used.
+
+\end{abstract}
+
+\section{Introduction}
+An escape room is an interactive game in which players solve puzzles and find clues to escape from a locked room within a set time limit. In some rooms, players may be locked in with no way out, while in others they may be able to leave at any time. \\
+Virtual reality is a computer-simulated environment that can be interacted with through multiple sensory channels, including sight, sound, touch, and even smell. The technology behind virtual reality has been used in the past to create immersive video games. However, today it is also being used to create immersive escape rooms.     \\
+A sample of the generated puzzles will be given to the players to find out if they are solving the puzzle in the same way as the computer does, or if they are using a different approach.
+The key motivation behind this project is to explore the potential to automate the creation of levels in games, which could drastically reduce the time for the creation of levels and the quality of the levels themselves.
+\\"In the right game — Diablo, Rogue, Spelunky, Daggerfall, Elite, Spore, even the likes of Football Manager — procedurally-generated content is magical. It elevates the design and highlights the elegance of the core system loops. It can save you time and earn you money."\cite{gamDev}\cite{diablo}\cite{diablo2}\cite{spelunky}\cite{rogue}
+
+\section{Background \& Supporting Literature}
+    One of the first and simplest approaches to generating game levels using procedural content is that of placing rooms, making sure they don't overlap,
+until we have the desired amount and then generating corridors with a simple dog leg algorithm that randomly switches between vertical first or horizontal first. This was used to much success in the 1980 title - Rogue, which spawned a new map for every playthrough consisting of 9 PCG rooms.\cite{rogue}\\
+"Rogue proved to be so popular that it inspired an entire generation of game designers to emulate it, leading to a wave of games that are collectively referred to as "roguelikes."" \cite {gameSpy}
+Another approach is Binary Space Partition rooms or BSP Rooms. First, rooms are generated as BSP Quads which is simple and fast. Then the room is split into two new rooms based on some splitting algorithm, like midpoint or HSplit. Finally, the new rooms are merged into 3 or 4 sublevel rooms with a size that fits your needs. This gives similar results to the random room placement, but guarantees better spacing. It's been used in the open source roguelike video game - NetHack among others.\cite {shaker2016procedural} \cite {roberts2014learning}\cite {short2017procedural}
+Another method for generating maps is that of Cellular Automata. These work by representing the map as a grid of cells. Each cell has an initial state and set of rules for how it will transition to the next state.
+All we need to do is generate a large number of starting states, apply the rules to each and see what happens. Then throw away the ones that don't look interesting and try again.
+For example, I could have a rule that every time a cell has three of the same symbol in it, it becomes hollow. This means that after about 50 iterations, there's usually only a few cells left. And although the resulting maze-like structure still has the same number of rooms as before, they are now randomly placed.\\
+Finally, we could have a set of rules that place a few rooms in the middle of the map and surround it with more rooms. Then shuffle the whole thing up and do it again. This would be rather easy to do, since we only have to worry about a small area of the map, but it results in rather hard to find dungeons.\cite {roberts2014learning}\cite {shaker2016procedural}
+\\"The academic and experimental indie development scenes are worth keeping tabs on, as they often offer novel generative solutions to hard content problems. They're particularly useful at the moment for help in developing systems that adapt a game's design to suit different play styles."\cite {gamDev}
+\\Drunkard's Walk, a popular approach to PCG for beginners that works by placing rooms in a grid and then moving each room a random amount in some direction based on the probability of that direction. If we use this to place rooms on the X and Y axes, then it will result in a more natural looking level, but takes longer to generate than BSP Quads.\cite {6017222}\cite {roberts2014learning}
+\\Diffusion Limited Aggregation works in a similar way, but uses the square of the probability to determine the size of the shift. This generates more natural looking levels than Drunkard's Walk, at the cost of longer runtime.\\\cite {shaker2016procedural}
+\\Perlin/Simplex Noise is relatively simple to use and can generate very nice looking levels. It's also capable of generating weighted levels, where the middle of the map is more likely to contain rooms than the edges.\\\cite {shaker2016procedural}
+\\Another option is the A* algorithm, originally designed for path finding in artificial intelligence. When used in conjunction with PCG, we can give it a goal to work towards and have it fill the area around that goal with rooms. This is the approach that Caves of Qud uses.\\\cite {shaker2016procedural} \cite {roberts2014learning}\cite {short2017procedural}
+In addition many of these algorithms can be used in combination with each other.
+\\The important thing to remember with procedural content generation is that it will never produce a level identical to the one you designed yourself. Even if you use the same processes to generate a level, somewhere down the line, some minor detail will be slightly different which will make the whole experience feel novel.\\
+\\Puzzles are possibly the most commonly used type of game mechanic. They are usually placed at certain parts in a game to stop the player from getting bored, or to give them a challenge they must overcome to proceed.
+So what exactly is a "puzzle" anyway? This is a question that has been asked countless times and been answered in many different ways.
+The simplest definition possible is that of an obstacle that must be overcome. We can then subdivide this into different types of obstacles and challenges.
+Mazes are a simple example of a classic puzzle, where the map is generated in such a way as to prevent the player from simply going through rooms with no thought or issue.
+The same goes for any situation where objects are placed in such a way as to hinder the player's progress, unless they use their head.
+Another puzzle type is that of "inventory puzzles", where the player must get a specific item and use it at the right time and place. The classic example of this would be "Push the block on this button to open the door".
+A "logical puzzle" is one that requires the player to logically deduce how they can proceed, as opposed to a direct approach. This often takes the form of "how do I unlock this door without any keys", or "how do I make this NPC trust me?"
+Finally, there are "riddles" which require the player to figure out a word or phrase which will allow them to proceed.
+The interesting thing about puzzles is that the way they are generated tends to be vastly different depending on the type of game and how exactly the puzzle is intended to work.
+Often it's a lot easier to generate the actual puzzle than it is to make sure the player has a chance of solving it.
+This is why when designing a game with puzzles, you should always start by thinking about what kind of puzzles you want to use and how they'll work for your game. It's better to plan this out before hand than to just throw puzzles into a game without giving them much thought.
+\\"Procedurally-generated content can fit whatever purpose you need — be that Spore-like adaptive animation systems, Diablo and Rogue-esque dungeon layouts, infinite levels, evolving cities, alien landscapes, infinite replayability, grokkable systems, adaptive music, or just about anything else."\cite {gamDev}\cite {noMan}\cite {automaticGenDungeons}\cite {6017222}\cite {diablo}\cite {diablo2}
+\section{Research Question}
+    From the above sources, I have formed \textbf{In the VR context, to what extent are procedurally generated puzzles enjoyable compared to game designer generated puzzles?}
+
+\section{Hypothesis}
+\begin{enumerate}
+ 	\item Players will enjoy puzzles that were designed by the game designer more than procedurally generated puzzles.
+
+	\item Players will enjoy procedurally generated puzzles more than puzzles designed by the game designer.
+
+ 	\item Players will complete procedurally generated puzzles with a solution that is different from the expected solution.
+\end{enumerate}
+
+\section{Artifact}
+\subsection {Visuals}
+
+
+The goal is to create a puzzle that will be visually realistic, consistent and coherent.
+
+This means that the elements of the scene must be filtered and organized. For example, if you have a pile of objects in front of you, they should not exceed 1/3 of the field of view. The light must be filtered, and artificial light should not be too bright. The same applies to the color of objects. If a scene is dark, it will not be too colorful.
+
+The objects that you can manipulate must have a clear shape that is easy to identify by the user.
+
+All objects that can be interacted with must present a neutral state, a state where they are manipulated by the user, and a final state. The transition between these states is extremely important. Objects must not fade in or out. They must have an animation applied when they change their state.
+
+The state of each object is defined by its position, orientation, and size.
+
+An object may have several states depending on how it can be manipulated. For example, a drawer can be open or closed. To avoid confusion, only one state at a time must be displayed to the user. 
+
+
+\subsection {Audio}
+
+
+The sound must be realistic, consistent and coherent with the visual.
+
+
+The sound must not be too loud, so it does not disturb the player's immersion. This can be achieved by adjusting the volume in the Unity3D environment, or by filtering the sounds in Wwise.
+
+
+The sounds that you can hear in the game (such as the sound of a door opening) are sounds that were recorded in a real environment.
+
+
+The sounds that you cannot hear in the game (ambient music, for example) must be consistent with the virtual reality proposed by the visual.
+
+
+Only one sound should be played at a time.
+
+\subsection {Setting}
+
+The setting should be realistic, consistent and coherent. This is to avoid confusion and make the puzzle easier to solve.
+
+The setting should be simple. It is not necessary to recreate a real environment. This will require a lot of work and it will take away time from other elements that are more important.
+
+The setting should offer a varied gameplay. This is to prevent the player from getting bored.
+
+The puzzles must be solvable in a few minutes. The player may get bored if they spend too much time on the same puzzle.
+
+\subsection {Gameplay}
+
+The gameplay must be simple and intuitive. The player should not have to spend more than a few seconds to understand how it works.
+
+A good way to do this is by using icons, buttons, or panels that are easy to recognize and understand.
+
+The gameplay must be consistent with the visual. 
+
+The player must have the freedom to move freely in the room and manipulate objects at their leisure.
+
+The solution to the puzzle must be logical. The solution must not be too obvious and it should not be possible to solve it without thinking about it.
+
+The gameplay must have a learning curve. It must start easy, becoming increasingly difficult over time.
+
+The difficulty of the puzzles must progress in a way that allows the player to learn the basic interactions of the game. If the player is able to solve most of the puzzles at the beginning, they will become bored when they arrive at more complex ones.
+
+The difficulty must be consistent with the gameplay. A puzzle that requires a lot of dexterity or precision should not be placed in an environment where the player can move without constraint.
+
+The game must have a reset button. This is useful to restart a puzzle if you do not know how to solve it.
+
+The game must be optimized for VR. With this, it is meant that the camera should move in a way that does not cause nausea.
+
+The game must be optimized for Oculus. With this, it is meant that the amount of polygons used should be as low as possible to minimize the cost of downloading and running the game on mobile devices.
+
+The game must be adaptable to a wide range of play sessions. This means that the player can stop playing whenever they want and resume at the same point later.
+
+The goal of this artifact is to generate a set of puzzles for an escape room in virtual reality. The idea is to create an algorithm that will generate random puzzles. These puzzles will be validated by a another algorithm, making sure they're solvable.
+
+The visual, audio and gameplay elements of a puzzle are independent. This means that the same visual and audio elements can be used in several different puzzles. This is to avoid duplicating work.\\
+"Procedural generation is essentially a way for game developers to introduce carefully controlled elements of randomness into their work – an inexhaustible variety of levels in Spelunky, an endless array of bizarre weapons in Borderlands, hordes of zombies appearing out of nowhere in Left4Dead. Instead of molding and shaping each tiny nuance manually, the game makers program certain parameters into an algorithm that can generate the content itself."\cite{noMan}
+
+\section{Primary Objectives}
+\begin{enumerate}
+    \item To compare how players solve procedurally generated puzzles to puzzles that were designed by the game designer. To be able to predict how players will solve a given adventure level.
+
+     \item To compare how players solve puzzles that were designed by the game designer to puzzles that were procedurally generated.
+
+     \item To be able to generate levels that are of comparable quality to levels designed by a game designer.
+\end{enumerate}
+ All of this in a Virtual Reality Escape Room setting where the task or set of tasks will need to always be completable to leave the room.
+Immersion in this environment is key, can the PCG content make players feel like they are in a human designed level?
+
+\section{Things that need to be tracked}
+
+	\begin{enumerate}
+
+    \item Predict how players will react to a given level, what will they try to do first, and how long will they spend trying to solve the puzzle.
+
+    \item Compare the quality of puzzles generated by the PCG algorithm and puzzles designed by a game designer.
+
+    \item Test the generated puzzles to see if they are able to be solved by the players, if not, what are the reasons for this.
+
+    \item If players are able to solve the generated puzzles, compare their solutions to the expected solution.
+
+    \item Determine the most important factors that influence player enjoyment of generated puzzles.
+	\end{enumerate}
+
+
+\section {Experimental Setup}
+\begin{enumerate}
+\item Participants
+A total of twenty participants will take part in the study. Participants will be recruited from the general university population and will range in age from 18 to 30.
+
+\item Materials
+All participants will be given a questionnaire to complete prior to taking part in the study. This questionnaire will ask questions about the participant’s gaming experience, as well as their opinion on procedurally generated content. Upon completing the levels, they will be given another set of questions to determine variables to later be analyzed such as enjoyability, challenge, skill, difficulty etc.
+
+\item Procedure
+The experiment will be conducted in a VR Escape Room setting. The player will be placed in a room and will have to complete a set of tasks in order to leave the room. The puzzles within the room will be either generated by a PCG algorithm or designed by a game designer. The player will be given a set of questions to complete after they have finished the level.
+	\end{enumerate}
+\section {Analyzing the Data Collected}
+
+The data collected will be analyzed using a variety of statistical tests in order to determine how players react to procedurally generated puzzles, how the quality of the generated puzzles compare to those designed by a game designer, and what factors influence player enjoyment of procedurally generated puzzles.
+\begin{enumerate}
+\item To determine how players will react to a given level, what will they try to do first, and how long will they spend trying to solve the puzzle.
+-Descriptive statistics will be used to analyze the data. This will include measures such as the mean, standard deviation, and median.
+
+\item Compare the quality of puzzles generated by the PCG algorithm and puzzles designed by a game designer.
+-A box and whiskers plot will be used to analyze the data. This will allow for a comparison of the two groups, graphically demonstrating the locality, spread and skewness groups of numerical data through their quartiles.
+
+\item Test the generated puzzles to see if they are able to be solved by the players, if not, what are the reasons for this.
+-An analysis of variance will be used to analyze the data. This will allow for a comparison of the three groups to determine if there is a significant difference between them.
+
+\item If players are able to solve the generated puzzles, compare their solutions to the expected solution.
+-A t-test will be used to analyze the data. This will allow for a comparison of the two groups to determine if there is a significant difference between them.
+
+\item Determine the most important factors that influence player enjoyment of generated puzzles.
+-A factor analysis will be used to analyze the data. This will allow for the determination of the most important factors that influence player enjoyment of procedurally generated puzzles.
+
+\item Simulated responses and their graphic representation.
+-The questionnaire box and whiskers plot is used to display the distribution of responses to a questionnaire. The x-axis represents the different responses, while the y-axis shows the frequency of each response. The box and whiskers plot will show the median, the upper and lower quartiles, and the outliers.
+\end{enumerate}
+
+\section{Theoretical Analysis}
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=0.5\textwidth, height=\textheight,keepaspectratio]{Rplot1.png}
+\caption{ The first box and whiskers plot is for the designer made puzzles. The median is 5.5, while the upper and lower quartiles are 6 and 4 respectively. There are no outliers..}
+  \label{fig:rplot1}
+	
+\end{center}
+\end{figure}
+%Figure \ref{fig:rplot1}
+
+\begin{figure}
+\begin{center}
+  \includegraphics[width=0.5\textwidth, height=\textheight,keepaspectratio]{Rplot2.png}
+\caption{The second box and whiskers plot is for the PCG generated puzzles. The median is 6.5, while the upper and lower quartiles are 7 and 6 respectively. There are a few}
+  \label{fig:rplot2}
+	
+\end{center}
+\end{figure}
+
+\subsection {First hypothesis} Players will enjoy puzzles that were designed by the game designer more than procedurally generated puzzles. The test data does not support this hypothesis, as the median for both types of puzzles is the same.
+
+\subsection {Second hypothesis} Players will enjoy procedurally generated puzzles more than puzzles designed by the game designer. The test data does support this hypothesis, as the median for procedurally generated puzzles is higher than the median for puzzles designed by the game designer.
+
+\subsection {Third hypothesis}Players will complete procedurally generated puzzles with a solution that is different from the expected solution. The test data does not support this hypothesis, as the majority of players completed procedurally generated puzzles with the expected solution.
+
+\section{Quality Assurance in Research and Development}
+The term “quality” is often used in many different ways, but it is generally accepted that software quality has to do with the characteristics of a software system that bear on its ability to satisfy stated or implied needs. 
+
+There are many factors that affect software quality. Some of these factors are: 
+-The accuracy and completeness of the requirements
+-The effectiveness of the design
+-The efficiency of the code
+-The robustness of the software
+-The usability of the software
+-The maintainability of the software
+-The testability of the software
+
+\subsection{Software Testing Methods}
+
+\begin{enumerate}
+\item Unit Testing
+Unit testing is a software testing method that focuses on the individual units of source code. These units can be classes, methods, or functions.
+
+\item Integration Testing
+Integration testing is a software testing method that focuses on the interaction between two or more units of source code. These units can be classes, methods, or functions.
+
+\item System Testing
+Method that focuses on the overall functionality of the software system. This type of testing can be done on a variety of levels, such as the system as a whole, subsystems, or individual components.
+
+\item Static Analyses
+Method that focuses on the examination of the source code without executing it. This type of analysis can be used to find defects in the code, such as errors, omissions, and conflicting requirements.
+
+\item Run-Time Analyses
+Software testing method that focuses on the execution of the code in order to find defects. This type of analysis can be used to find defects such as errors, incorrect results, and inappropriate actions.
+
+\item End-User Testing
+Software testing method that focuses on the actual use of the software by the end user. This type of testing is often done in conjunction with system testing.
+\end{enumerate}
+\subsection {Devising a Test Plan}
+
+A test plan is a document that outlines the steps that will be taken to test a software system. The purpose of the test plan is to ensure that all aspects of the system are tested and that all defects are found and fixed.
+
+The following steps should be taken when devising a test plan:
+\begin{enumerate}
+\item Decide which aspects of the software system need to be tested.
+\item Decide which testing methods will be used.
+\item Decide which test cases will be used.
+\item Decide who will be responsible for each step of the testing process.
+\item Establish a schedule for the testing process.
+\end{enumerate}
+
+
+\section{Appendix}
+
+\href{"https://github.com/ah228589/conjuring"}{GitHub Repository for the Artefact}\\
+\href{"https://github.com/AH228589/Conjuring/blob/master/GraphicRepresentationCodeinR.txt"}{GitHub for the RStduio Source }\\
+- https://github.com/ah228589/conjuring\\
+- https://github.com/AH228589/Conjuring/blob/master/GraphicRepresentationCodeinR.txt\\
+
+\bibliographystyle{ieeetr}
+\bibliography{bibliography}
+
+\end{document}
