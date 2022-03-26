@@ -8,8 +8,13 @@ public class MapGenerator : MonoBehaviour
 
     public int width;
     public int height;
-    public GameObject gate;
+    public GameObject gatePrefab;
+    private GameObject gate;
     public GameObject key;
+    public GameObject playerPrefab;
+
+    private GameObject player;
+    public List<GameObject> keys = new List<GameObject>();
     public string seed;
     public bool useRandomSeed;
 
@@ -21,6 +26,7 @@ public class MapGenerator : MonoBehaviour
     void Start()
     {
         GenerateMap();
+        SpawnKeys();
     }
 
     void Update()
@@ -28,10 +34,76 @@ public class MapGenerator : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             GenerateMap();
+            Invoke("SpawnKeys", 0.5f);
+        }
+
+        CheckIfPlayerHasAllKeys();
+    }
+
+    //Method that checks if the player has the same ammount of keys as the list of generated ones
+    public bool CheckIfPlayerHasAllKeys()
+    {
+        // Debug.Log("Player has " + player.GetComponent<PlayerKeyCounter>().GetKeyCount() + " keys");
+        // Debug.Log("Map has " + keys.Count + " keys");
+        if (player.GetComponent<PlayerKeyCounter>().GetKeyCount() == keys.Count)
+        {
+            Debug.Log("You have all the keys!");
+            Debug.Log("Gate is now open!");
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
-    void GenerateMap()
+    //Spawn 1-5 keys on the map, making sure they're not inside a wall tile
+    public void SpawnKeys()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            int x = UnityEngine.Random.Range(0, width);
+            int y = UnityEngine.Random.Range(0, height);
+            if (map[x, y] == 0)
+            {
+                SpawnKey(x, y);
+            }
+        }
+    }
+
+    //Spawn key at the given coordinates
+    void SpawnKey(int x, int y)
+    {
+        Coord coord = new Coord(x, y);
+        Vector3 location = CoordToWorldPoint(coord);
+        GameObject keyObject = Instantiate(key, new Vector3(location.x, -3.5f, location.y), Quaternion.identity) as GameObject;
+        keyObject.transform.parent = transform;
+        keys.Add(keyObject);
+    }
+
+    //Spawn gate at the given coordinates
+    void SpawnGate(Vector3 location)
+    {
+        GameObject gateObject = Instantiate(gatePrefab, new Vector3(location.x, -2f, location.y), Quaternion.identity) as GameObject;
+        gateObject.transform.parent = transform;
+        gate = gateObject;
+    }
+
+
+    //Remove player, gate and keys from the map before generating a new one
+    public void ClearMap()
+    {
+        foreach (GameObject key in keys)
+        {
+            Destroy(key);
+        }
+        keys.Clear();
+        Destroy(player);
+        Destroy(gate);
+    }
+
+
+    public void GenerateMap()
     {
         map = new int[width, height];
         RandomFillMap();
@@ -102,6 +174,16 @@ public class MapGenerator : MonoBehaviour
         survivingRooms.Sort();
         survivingRooms[0].isMainRoom = true;
         survivingRooms[0].isAccessibleFromMainRoom = true;
+
+        //Spawn player at center of main room
+        Vector3 playerSpawnPoint = CoordToWorldPoint(survivingRooms[0].GetCenter());
+        GameObject newplayer = Instantiate(playerPrefab, playerSpawnPoint, Quaternion.identity);
+        player = newplayer;
+
+        //spawn gate at center of second room
+        Vector3 gateSpawnPoint = CoordToWorldPoint(survivingRooms[0].GetCenter());
+        Vector3 offset = new Vector3(5, 0, 5);
+        SpawnGate(gateSpawnPoint + offset);
 
         ConnectClosestRooms(survivingRooms);
     }
@@ -201,7 +283,9 @@ public class MapGenerator : MonoBehaviour
         Debug.DrawLine(CoordToWorldPoint(tileA), CoordToWorldPoint(tileB), Color.green, 100);
 
         List<Coord> line = GetLine(tileA, tileB);
-        //Debug.DrawLine(CoordToWorldPoint(line[0]), CoordToWorldPoint(line[line.Count - 1]), Color.red, 100);
+        Vector3 cross = Vector3.Cross(CoordToWorldPoint(tileA) - CoordToWorldPoint(tileB), Vector3.forward);
+        Debug.DrawLine(cross, cross + Vector3.forward * 20, Color.red, 100);
+
         foreach (Coord c in line)
         {
             DrawCircle(c, 5);
@@ -507,6 +591,18 @@ public class MapGenerator : MonoBehaviour
         {
             return otherRoom.roomSize.CompareTo(roomSize);
         }
-    }
 
+        public Coord GetCenter()
+        {
+            Coord center = new Coord(0, 0);
+            foreach (Coord tile in tiles)
+            {
+                center.tileX += tile.tileX;
+                center.tileY += tile.tileY;
+            }
+            center.tileX /= tiles.Count;
+            center.tileY /= tiles.Count;
+            return center;
+        }
+    }
 }
