@@ -1,19 +1,9 @@
-/*
- *  This file is part of WinSparkle (https://winsparkle.org)
- *
- *  This example code is public domain.
- *
- */
-
 appicon ICON "appicon.ico"
 
 #include <winver.h>
 
 // Get updates from this appcast feed:
-FeedURL     APPCAST     {"https://winsparkle.org/example/appcast.xml"}
-
-// And verify signature using DSA public key:
-DSAPub      DSAPEM      "dsa_pub.pem"
+FeedURL     APPCAST     {"https://drive.google.com/uc?export=download&id=1--eJMiSKzNDsaQjLwJOxvVqCwPNv64j0"}
 
 // Version information; this, too, is used by WinSparkle
 1 VERSIONINFO
@@ -36,8 +26,8 @@ BEGIN
             VALUE "InternalName", "GameLauncherPog\0"
             VALUE "OriginalFilename", "GameLauncherPog.exe\0"
             VALUE "LegalCopyright", "Public Domain\0"
-            VALUE "ProductName", "GameLauncherPog\0"
-            VALUE "ProductVersion", "1.1\0"
+            VALUE "ProductName", "WinSparkle Example App\0"
+            VALUE "ProductVersion", "1.0\0"
         END
     END
 
