@@ -33,11 +33,11 @@ BEGIN
             VALUE "CompanyName", "winsparkle.org\0"
             VALUE "FileDescription", "WinSparkle example\0"
             VALUE "FileVersion", "1.0\0"
-            VALUE "InternalName", "example_psdk\0"
-            VALUE "OriginalFilename", "example_psdk.exe\0"
+            VALUE "InternalName", "GameLauncherPog\0"
+            VALUE "OriginalFilename", "GameLauncherPog.exe\0"
             VALUE "LegalCopyright", "Public Domain\0"
-            VALUE "ProductName", "WinSparkle Example App\0"
-            VALUE "ProductVersion", "1.0\0"
+            VALUE "ProductName", "GameLauncherPog\0"
+            VALUE "ProductVersion", "1.1\0"
         END
     END
 
