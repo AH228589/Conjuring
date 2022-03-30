@@ -1,19 +1,9 @@
-/*
- *  This file is part of WinSparkle (https://winsparkle.org)
- *
- *  This example code is public domain.
- *
- */
-
 appicon ICON "appicon.ico"
 
 #include <winver.h>
 
 // Get updates from this appcast feed:
 FeedURL     APPCAST     {"https://winsparkle.org/example/appcast.xml"}
-
-// And verify signature using DSA public key:
-DSAPub      DSAPEM      "dsa_pub.pem"
 
 // Version information; this, too, is used by WinSparkle
 1 VERSIONINFO
