@@ -75,18 +75,43 @@ public class MapGenerator : MonoBehaviour
     void SpawnKey(int x, int y)
     {
         Coord coord = new Coord(x, y);
-        Vector3 location = CoordToWorldPoint(coord);
-        GameObject keyObject = Instantiate(key, new Vector3(location.x, -3.5f, location.y), Quaternion.identity) as GameObject;
-        keyObject.transform.parent = transform;
-        keys.Add(keyObject);
+        if (coord.tileX < width && coord.tileY < height)
+        {
+            //Make sure that the key is not inside a wall tile
+            if (map[coord.tileX, coord.tileY] == 0)
+            {
+                Vector3 location = CoordToWorldPoint(coord);
+                GameObject keyObject = Instantiate(key, new Vector3(location.x, -3.5f, location.y), Quaternion.identity) as GameObject;
+                keyObject.transform.parent = transform;
+                keys.Add(keyObject);
+            }
+            else
+            {
+                //Choose a new location that is close by and is not a wall tile
+                SpawnKey(x + 1, y);
+            }
+        }
     }
 
-    //Spawn gate at the given coordinates
-    void SpawnGate(Vector3 location)
+    //Spawn the gate at the given coordinates and make sure it's not inside a wall tile
+    void SpawnGate(int x, int y)
     {
-        GameObject gateObject = Instantiate(gatePrefab, new Vector3(location.x, -2f, location.y), Quaternion.identity) as GameObject;
-        gateObject.transform.parent = transform;
-        gate = gateObject;
+        Coord coord = new Coord(x, y);
+        if (coord.tileX < width && coord.tileY < height)
+        {
+            //Make sure that the gate is not inside a wall tile
+            if (map[coord.tileX, coord.tileY] == 0)
+            {
+                Vector3 location = CoordToWorldPoint(coord);
+                gate = Instantiate(gatePrefab, new Vector3(location.x, -3.5f, location.y), Quaternion.identity) as GameObject;
+                gate.transform.parent = transform;
+            }
+            else
+            {
+                //Choose a new location that is close by and is not a wall tile
+                SpawnGate(x + 1, y);
+            }
+        }
     }
 
 
@@ -180,11 +205,6 @@ public class MapGenerator : MonoBehaviour
         GameObject newplayer = Instantiate(playerPrefab, playerSpawnPoint, Quaternion.identity);
         player = newplayer;
 
-        //spawn gate at center of second room
-        Vector3 gateSpawnPoint = CoordToWorldPoint(survivingRooms[0].GetCenter());
-        Vector3 offset = new Vector3(5, 0, 5);
-        SpawnGate(gateSpawnPoint + offset);
-
         ConnectClosestRooms(survivingRooms);
     }
 
@@ -277,21 +297,27 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+
+
     void CreatePassage(Room roomA, Room roomB, Coord tileA, Coord tileB)
     {
         Room.ConnectRooms(roomA, roomB);
         Debug.DrawLine(CoordToWorldPoint(tileA), CoordToWorldPoint(tileB), Color.green, 100);
 
         List<Coord> line = GetLine(tileA, tileB);
-        Vector3 cross = Vector3.Cross(CoordToWorldPoint(tileA) - CoordToWorldPoint(tileB), Vector3.forward);
-        Debug.DrawLine(cross, cross + Vector3.forward * 20, Color.red, 100);
 
         foreach (Coord c in line)
         {
             DrawCircle(c, 5);
         }
+        PlaceGate(line[line.Count-1]);
     }
-
+    //Method to place gates using a coordinate
+    void PlaceGate(Coord c)
+    {
+        GameObject newGate = Instantiate(gatePrefab, CoordToWorldPoint(c), Quaternion.identity);
+        gate = newGate;
+    }
     void DrawCircle(Coord c, int r)
     {
         for (int x = -r; x <= r; x++)
