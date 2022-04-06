@@ -28,6 +28,7 @@ public class MapGenerator : MonoBehaviour
     {
         GenerateMap();
         SpawnKeys();
+        SpawnGate();
     }
 
     void Update()
@@ -63,35 +64,18 @@ public class MapGenerator : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            int x = UnityEngine.Random.Range(0, width);
-            int y = UnityEngine.Random.Range(0, height);
-            if (map[x, y] == 0)
-            {
-                SpawnKey(x, y);
-            }
+            SpawnKey();
         }
     }
 
-    //Spawn key at the given coordinates
-    void SpawnKey(int x, int y)
+
+    //Spawn Key using GetRandomLocation
+    public void SpawnKey()
     {
-        Coord coord = new Coord(x, y);
-        if (coord.tileX < width && coord.tileY < height)
-        {
-            //Make sure that the key is not inside a wall tile
-            if (map[coord.tileX, coord.tileY] == 0)
-            {
-                Vector3 location = CoordToWorldPoint(coord);
-                GameObject keyObject = Instantiate(key, new Vector3(location.x, -3.5f, location.y), Quaternion.identity) as GameObject;
-                keyObject.transform.parent = transform;
-                keys.Add(keyObject);
-            }
-            else
-            {
-                //Choose a new location that is close by and is not a wall tile
-                SpawnKey(x + 1, y);
-            }
-        }
+        Vector3 location = GetRandomLocation();
+        GameObject keyObject = Instantiate(key, new Vector3(location.x, -3.5f, location.y), Quaternion.identity);
+        keyObject.transform.parent = transform;
+        keys.Add(keyObject);
     }
 
 
@@ -276,9 +260,6 @@ public class MapGenerator : MonoBehaviour
             ConnectClosestRooms(allRooms, true);
         }
     }
-
-
-
     void CreatePassage(Room roomA, Room roomB, Coord tileA, Coord tileB)
     {
         Room.ConnectRooms(roomA, roomB);
@@ -290,37 +271,34 @@ public class MapGenerator : MonoBehaviour
         {
             DrawCircle(c, 5);
         }
-        PlaceGate(line[line.Count - 1]);
     }
 
-    //Method to place gates using a coordinate
-    void PlaceGate(Coord c)
+    //Spawn a gate at the edge of the map, making sure it's not inside a wall
+    void SpawnGate()
     {
-        if (UnityEngine.Random.Range(0, 2) == 0)
-        {
-            GameObject newGate = Instantiate(gatePrefab, CoordToWorldPoint(c), Quaternion.identity);
-            newGate.transform.Rotate(0, 90, 0);
-            MoveGate(newGate);
-        }
+        //spawn gate with GetRandomLocation
+        Vector3 gateLocation = GetRandomLocation();
+        gateLocation = new Vector3(gateLocation.x, gateLocation.y - 3.85f, gateLocation.z);
+        GameObject newGate = Instantiate(gatePrefab, gateLocation, Quaternion.identity);
+        gate = newGate;
     }
 
-    void MoveGate(GameObject gate)
+    //Get a random free location on the map
+    Vector3 GetRandomLocation()
     {
-        Vector3 right = gate.transform.TransformDirection(Vector3.right);
-        Vector3 left = gate.transform.TransformDirection(Vector3.left);
-        RaycastHit hitRight;
-        RaycastHit hitLeft;
-        if (Physics.Raycast(transform.position, right, out hitRight, 10) && Physics.Raycast(transform.position, left, out hitLeft, 10))
+        int x = 0;
+        int y = 0;
+        bool foundLocation = false;
+        while (!foundLocation)
         {
-            //Get the distance between the two walls and put the gate in the middle
-            float distance = Vector3.Distance(hitRight.point, hitLeft.point);
-            gate.transform.position = transform.position + (right + left) / 2;
+            x = UnityEngine.Random.Range(0, width);
+            y = UnityEngine.Random.Range(0, height);
+            if (map[x, y] == 0)
+            {
+                foundLocation = true;
+            }
         }
-        else
-        {
-            Destroy(gate);
-            Debug.Log("Could not find a wall to place the gate");
-        }
+        return CoordToWorldPoint(new Coord(x, y));
     }
 
     void DrawCircle(Coord c, int r)
