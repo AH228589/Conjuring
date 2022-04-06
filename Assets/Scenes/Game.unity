@@ -560,6 +560,9 @@ MonoBehaviour:
   key: {fileID: 7769947399600407414, guid: 8c08015f4295865429abe12a32d85394, type: 3}
   playerPrefab: {fileID: 2556278069895279235, guid: 93e7b59a42a197343a62c8c32299cb8c,
     type: 3}
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 0
   keys: []
   seed: 
   useRandomSeed: 1
@@ -837,7 +840,7 @@ GameObject:
   - component: {fileID: 663968339}
   - component: {fileID: 663968341}
   - component: {fileID: 663968340}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cave Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1111,7 +1114,7 @@ GameObject:
   - component: {fileID: 777526923}
   - component: {fileID: 777526922}
   - component: {fileID: 777526924}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}

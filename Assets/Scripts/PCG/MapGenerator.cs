@@ -12,6 +12,7 @@ public class MapGenerator : MonoBehaviour
     private GameObject gate;
     public GameObject key;
     public GameObject playerPrefab;
+    public LayerMask wallMask;
 
     private GameObject player;
     public List<GameObject> keys = new List<GameObject>();
@@ -89,27 +90,6 @@ public class MapGenerator : MonoBehaviour
             {
                 //Choose a new location that is close by and is not a wall tile
                 SpawnKey(x + 1, y);
-            }
-        }
-    }
-
-    //Spawn the gate at the given coordinates and make sure it's not inside a wall tile
-    void SpawnGate(int x, int y)
-    {
-        Coord coord = new Coord(x, y);
-        if (coord.tileX < width && coord.tileY < height)
-        {
-            //Make sure that the gate is not inside a wall tile
-            if (map[coord.tileX, coord.tileY] == 0)
-            {
-                Vector3 location = CoordToWorldPoint(coord);
-                gate = Instantiate(gatePrefab, new Vector3(location.x, -3.5f, location.y), Quaternion.identity) as GameObject;
-                gate.transform.parent = transform;
-            }
-            else
-            {
-                //Choose a new location that is close by and is not a wall tile
-                SpawnGate(x + 1, y);
             }
         }
     }
@@ -310,14 +290,39 @@ public class MapGenerator : MonoBehaviour
         {
             DrawCircle(c, 5);
         }
-        PlaceGate(line[line.Count-1]);
+        PlaceGate(line[line.Count - 1]);
     }
+
     //Method to place gates using a coordinate
     void PlaceGate(Coord c)
     {
-        GameObject newGate = Instantiate(gatePrefab, CoordToWorldPoint(c), Quaternion.identity);
-        gate = newGate;
+        if (UnityEngine.Random.Range(0, 2) == 0)
+        {
+            GameObject newGate = Instantiate(gatePrefab, CoordToWorldPoint(c), Quaternion.identity);
+            newGate.transform.Rotate(0, 90, 0);
+            MoveGate(newGate);
+        }
     }
+
+    void MoveGate(GameObject gate)
+    {
+        Vector3 right = gate.transform.TransformDirection(Vector3.right);
+        Vector3 left = gate.transform.TransformDirection(Vector3.left);
+        RaycastHit hitRight;
+        RaycastHit hitLeft;
+        if (Physics.Raycast(transform.position, right, out hitRight, 10) && Physics.Raycast(transform.position, left, out hitLeft, 10))
+        {
+            //Get the distance between the two walls and put the gate in the middle
+            float distance = Vector3.Distance(hitRight.point, hitLeft.point);
+            gate.transform.position = transform.position + (right + left) / 2;
+        }
+        else
+        {
+            Destroy(gate);
+            Debug.Log("Could not find a wall to place the gate");
+        }
+    }
+
     void DrawCircle(Coord c, int r)
     {
         for (int x = -r; x <= r; x++)
