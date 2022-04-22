@@ -5,17 +5,15 @@ using System;
 
 public class MapGenerator : MonoBehaviour
 {
-
     public int width;
     public int height;
-    public GameObject gatePrefab;
-    private GameObject gate;
-    public GameObject key;
+
     public GameObject playerPrefab;
+
+    public ObjectSpawner objectSpawner;
     public LayerMask wallMask;
 
     private GameObject player;
-    public List<GameObject> keys = new List<GameObject>();
     public string seed;
     public bool useRandomSeed;
 
@@ -27,8 +25,8 @@ public class MapGenerator : MonoBehaviour
     void Start()
     {
         GenerateMap();
-        SpawnKeys();
-        SpawnGate();
+        objectSpawner.SpawnGate();
+        objectSpawner.SpawnKeys();
     }
 
     void Update()
@@ -36,61 +34,14 @@ public class MapGenerator : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             GenerateMap();
-            Invoke("SpawnKeys", 0.5f);
-        }
-
-        CheckIfPlayerHasAllKeys();
-    }
-
-    //Method that checks if the player has the same ammount of keys as the list of generated ones
-    public bool CheckIfPlayerHasAllKeys()
-    {
-        // Debug.Log("Player has " + player.GetComponent<PlayerKeyCounter>().GetKeyCount() + " keys");
-        // Debug.Log("Map has " + keys.Count + " keys");
-        if (player.GetComponent<PlayerKeyCounter>().GetKeyCount() == keys.Count)
-        {
-            Debug.Log("You have all the keys!");
-            Debug.Log("Gate is now open!");
-            return true;
-        }
-        else
-        {
-            return false;
         }
     }
-
-    //Spawn 1-5 keys on the map, making sure they're not inside a wall tile
-    public void SpawnKeys()
-    {
-        for (int i = 0; i < 5; i++)
-        {
-            SpawnKey();
-        }
-    }
-
-
-    //Spawn Key using GetRandomLocation
-    public void SpawnKey()
-    {
-        Vector3 location = GetRandomLocation();
-        GameObject keyObject = Instantiate(key, new Vector3(location.x, -3.5f, location.y), Quaternion.identity);
-        keyObject.transform.parent = transform;
-        keys.Add(keyObject);
-    }
-
 
     //Remove player, gate and keys from the map before generating a new one
     public void ClearMap()
     {
-        foreach (GameObject key in keys)
-        {
-            Destroy(key);
-        }
-        keys.Clear();
         Destroy(player);
-        Destroy(gate);
     }
-
 
     public void GenerateMap()
     {
@@ -111,7 +62,12 @@ public class MapGenerator : MonoBehaviour
         {
             for (int y = 0; y < borderedMap.GetLength(1); y++)
             {
-                if (x >= borderSize && x < width + borderSize && y >= borderSize && y < height + borderSize)
+                if (
+                    x >= borderSize
+                    && x < width + borderSize
+                    && y >= borderSize
+                    && y < height + borderSize
+                )
                 {
                     borderedMap[x, y] = map[x - borderSize, y - borderSize];
                 }
@@ -174,7 +130,6 @@ public class MapGenerator : MonoBehaviour
 
     void ConnectClosestRooms(List<Room> allRooms, bool forceAccessibilityFromMainRoom = false)
     {
-
         List<Room> roomListA = new List<Room>(); // not accessible from main room
         List<Room> roomListB = new List<Room>(); //accessible from main room
 
@@ -229,7 +184,10 @@ public class MapGenerator : MonoBehaviour
                     {
                         Coord tileA = roomA.edgeTiles[tileIndexA];
                         Coord tileB = roomB.edgeTiles[tileIndexB];
-                        int distanceBetweenRooms = (int)(Mathf.Pow(tileA.tileX - tileB.tileX, 2) + Mathf.Pow(tileA.tileY - tileB.tileY, 2));
+                        int distanceBetweenRooms = (int)(
+                            Mathf.Pow(tileA.tileX - tileB.tileX, 2)
+                            + Mathf.Pow(tileA.tileY - tileB.tileY, 2)
+                        );
 
                         if (distanceBetweenRooms < bestDistance || !possibleConnectionFound)
                         {
@@ -260,6 +218,7 @@ public class MapGenerator : MonoBehaviour
             ConnectClosestRooms(allRooms, true);
         }
     }
+
     void CreatePassage(Room roomA, Room roomB, Coord tileA, Coord tileB)
     {
         Room.ConnectRooms(roomA, roomB);
@@ -273,18 +232,8 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    //Spawn a gate at the edge of the map, making sure it's not inside a wall
-    void SpawnGate()
-    {
-        //spawn gate with GetRandomLocation
-        Vector3 gateLocation = GetRandomLocation();
-        gateLocation = new Vector3(gateLocation.x, gateLocation.y - 3.85f, gateLocation.z);
-        GameObject newGate = Instantiate(gatePrefab, gateLocation, Quaternion.identity);
-        gate = newGate;
-    }
-
     //Get a random free location on the map
-    Vector3 GetRandomLocation()
+    public Vector3 GetRandomLocation()
     {
         int x = 0;
         int y = 0;
@@ -447,7 +396,6 @@ public class MapGenerator : MonoBehaviour
         return x >= 0 && x < width && y >= 0 && y < height;
     }
 
-
     void RandomFillMap()
     {
         if (useRandomSeed)
@@ -485,7 +433,6 @@ public class MapGenerator : MonoBehaviour
                     map[x, y] = 1;
                 else if (neighbourWallTiles < 4)
                     map[x, y] = 0;
-
             }
         }
     }
@@ -526,7 +473,6 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-
     class Room : IComparable<Room>
     {
         public List<Coord> tiles;
@@ -536,9 +482,7 @@ public class MapGenerator : MonoBehaviour
         public bool isAccessibleFromMainRoom;
         public bool isMainRoom;
 
-        public Room()
-        {
-        }
+        public Room() { }
 
         public Room(List<Coord> roomTiles, int[,] map)
         {

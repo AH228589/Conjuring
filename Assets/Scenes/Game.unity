@@ -534,6 +534,7 @@ GameObject:
   - component: {fileID: 509230443}
   - component: {fileID: 509230442}
   - component: {fileID: 509230444}
+  - component: {fileID: 509230445}
   m_Layer: 0
   m_Name: Map Generator
   m_TagString: Untagged
@@ -555,15 +556,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 256
   height: 144
-  gatePrefab: {fileID: 3727663259960301327, guid: a6c059453fb0023429046d24a74855bc,
-    type: 3}
-  key: {fileID: 7769947399600407414, guid: 8c08015f4295865429abe12a32d85394, type: 3}
   playerPrefab: {fileID: 2556278069895279235, guid: 93e7b59a42a197343a62c8c32299cb8c,
     type: 3}
+  objectSpawner: {fileID: 509230445}
   wallMask:
     serializedVersion: 2
     m_Bits: 0
-  keys: []
   seed: 
   useRandomSeed: 1
   randomFillPercent: 50
@@ -599,6 +597,23 @@ MonoBehaviour:
   walls: {fileID: 777526922}
   cave: {fileID: 663968341}
   is2D: 0
+--- !u!114 &509230445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 509230441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07899f208487cf041858239e9f52a63b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gatePrefab: {fileID: 3727663259960301327, guid: a6c059453fb0023429046d24a74855bc,
+    type: 3}
+  keys: []
+  key: {fileID: 7769947399600407414, guid: 8c08015f4295865429abe12a32d85394, type: 3}
+  mapGenerator: {fileID: 509230442}
 --- !u!1 &535016064
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class NextLevel : MonoBehaviour
 {
-    public GameObject mapGenerator;
-    
+    public MapGenerator mapGenerator;
+    public ObjectSpawner objectSpawner;
+
     void Awake()
     {
-        mapGenerator = GameObject.Find("Map Generator");
+        mapGenerator = FindObjectOfType<MapGenerator>();
+        objectSpawner = FindObjectOfType<ObjectSpawner>();
     }
 
     void OnTriggerEnter(Collider other)
@@ -18,10 +20,17 @@ public class NextLevel : MonoBehaviour
             NextLevelInit();
         }
     }
+
     void NextLevelInit()
     {
-        mapGenerator.GetComponent<MapGenerator>().ClearMap();
-        mapGenerator.GetComponent<MapGenerator>().GenerateMap();
-        mapGenerator.GetComponent<MapGenerator>().SpawnKeys();
+        //Clears and re-generates map
+        mapGenerator.ClearMap();
+        mapGenerator.GenerateMap();
+        
+        //Clears keys and gate and re-generates them
+        objectSpawner.ClearGate();
+        objectSpawner.ClearKeys();
+        objectSpawner.SpawnGate();
+        objectSpawner.SpawnKeys();
     }
 }
