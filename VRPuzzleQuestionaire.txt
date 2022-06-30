@@ -1,0 +1,41 @@
+1. Setup questionaire
+
+Please indicate how you felt after you finished playing the level for each of the items, 
+on the following scale:
+(1)Not at all (2)Slightly (3)Moderately (4)Fairly (5)Extremely
+
+
+1 I felt content
+2 I felt skilful
+3 I thought it was fun
+4 I was fully occupied with the game
+5 I felt happy
+6 It gave me a bad mood
+7 I thought about other things
+8 I found it tiresome
+9 I felt competent
+10 I thought it was hard
+11 It was aesthetically pleasing
+12 I forgot everything around me
+13 I felt good
+14 I was good at it
+15 I felt bored
+16 I felt successful
+17 I felt that I could explore things
+18 I enjoyed it
+19 I was fast at reaching the game's targets
+20 I felt annoyed
+21 I felt pressured
+22 I felt irritable
+23 I lost track of time
+24 I felt challenged
+25 I found it impressive
+26 I was deeply concentrated in the game
+27 I felt frustrated
+28 It felt like a rich experience
+29 I lost connection with the outside world
+
+
+2. Map variables enjoyment - 
+Level 1 (Generated) - (Score) Level of enjoyment
+Level 1 (Designed) - (Score) Level of enjoyment
